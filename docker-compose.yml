@@ -1,6 +1,8 @@
+name: waiting-room
+
 services:
   db:
-    image: postgres:17-alpine
+    image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-waitingroom}
       POSTGRES_USER: ${POSTGRES_USER:-waitingroom}
@@ -15,6 +17,50 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  migrate:
+    build: ./backend
+    command: ["alembic", "upgrade", "head"]
+    environment: &backend-env
+      DB_HOST: db
+      DB_NAME: ${POSTGRES_DB:-waitingroom}
+      DB_USER: ${POSTGRES_USER:-waitingroom}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        GIT_SHA: ${GIT_SHA:-local}
+    environment: *backend-env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_APP_VERSION: ${GIT_SHA:-local}
+    environment:
+      API_UPSTREAM: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:8080"
 
 volumes:
   db-data:
