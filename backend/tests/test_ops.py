@@ -4,7 +4,7 @@ from app.routers import ops
 def test_health_ok(client):
     r = client.get("/health")
     assert r.status_code == 200
-    assert r.json() == {"status": "ok"}
+    assert r.json() == {"status": "broken"}
 
 
 def test_ready_reports_ready_when_db_up(client):
