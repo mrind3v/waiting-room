@@ -1,0 +1,12 @@
+{{- if .Values.monitoring.dashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "wr.fullname" . }}-dashboard
+  labels:
+    {{- include "wr.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  waiting-room.json: |-
+{{ .Files.Get "dashboards/waiting-room.json" | indent 4 }}
+{{- end }}

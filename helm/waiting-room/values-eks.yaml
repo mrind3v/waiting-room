@@ -1,0 +1,4 @@
+ingress:
+  host: ""
+postgres:
+  storageClass: gp3

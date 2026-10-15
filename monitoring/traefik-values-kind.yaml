@@ -1,0 +1,15 @@
+service:
+  type: NodePort
+ports:
+  web:
+    nodePort: 30080
+  websecure:
+    expose:
+      default: false
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: false
+resources:
+  requests: {cpu: 50m, memory: 64Mi}
+  limits: {cpu: 300m, memory: 128Mi}

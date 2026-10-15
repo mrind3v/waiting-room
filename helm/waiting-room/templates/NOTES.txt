@@ -1,0 +1,10 @@
+Waiting Room {{ .Chart.AppVersion }} deployed (image tag: {{ .Values.backend.image.tag }}).
+
+{{- if .Values.ingress.enabled }}
+Ingress class "{{ .Values.ingress.className }}": {{ if .Values.ingress.host }}http://{{ .Values.ingress.host }}{{ else }}use the load balancer hostname of your ingress controller{{ end }}
+{{- end }}
+
+Quick checks:
+  kubectl -n {{ .Release.Namespace }} get pods,svc,ingress,hpa
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "wr.fullname" . }}-backend 8000:{{ .Values.backend.port }}
+  curl localhost:8000/metrics | head

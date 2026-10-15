@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "wr.fullname" . }}-postgres
+  labels:
+    {{- include "wr.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "wr.selector" (dict "root" . "component" "postgres") | nindent 4 }}
+  ports:
+    - {name: pg, port: 5432, targetPort: pg}

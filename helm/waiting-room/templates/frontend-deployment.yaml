@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wr.fullname" . }}-frontend
+  labels:
+    {{- include "wr.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  {{- if not .Values.hpa.frontend.enabled }}
+  replicas: {{ .Values.frontend.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "wr.selector" (dict "root" . "component" "frontend") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "wr.labels" . | nindent 8 }}
+        app.kubernetes.io/component: frontend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: frontend
+          image: {{ include "wr.frontendImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - {name: http, containerPort: {{ .Values.frontend.port }}}
+          env:
+            - name: API_UPSTREAM
+              value: http://{{ include "wr.fullname" . }}-backend:{{ .Values.backend.port }}
+          readinessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: tmp, mountPath: /tmp}
+            - {name: nginx-conf, mountPath: /etc/nginx/conf.d}
+      volumes:
+        - {name: tmp, emptyDir: {}}
+        - {name: nginx-conf, emptyDir: {}}

@@ -1,0 +1,16 @@
+{{- if and .Values.monitoring.serviceMonitor.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1") }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "wr.fullname" . }}-backend
+  labels:
+    {{- include "wr.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "wr.selector" (dict "root" . "component" "backend") | nindent 6 }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+{{- end }}

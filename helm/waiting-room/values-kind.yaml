@@ -1,0 +1,4 @@
+ingress:
+  host: waiting-room.localtest.me
+postgres:
+  storageClass: standard

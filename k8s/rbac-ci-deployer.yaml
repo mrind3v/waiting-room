@@ -1,0 +1,55 @@
+# EKS only: namespace-scoped permissions for the CI user (mapped to group waiting-room-deployers
+# by a Terraform-managed EKS access entry). No cluster-wide rights.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ci-deployer
+  namespace: waiting-room
+rules:
+  - apiGroups: ["", "apps", "batch", "autoscaling", "networking.k8s.io"]
+    resources:
+      [deployments, statefulsets, replicasets, services, configmaps, secrets, pods, pods/log,
+       persistentvolumeclaims, events, ingresses, horizontalpodautoscalers, jobs, serviceaccounts]
+    verbs: [get, list, watch, create, update, patch, delete]
+  - apiGroups: ["monitoring.coreos.com"]
+    resources: [servicemonitors]
+    verbs: [get, list, watch, create, update, patch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ci-deployer
+  namespace: waiting-room
+subjects:
+  - kind: Group
+    name: waiting-room-deployers
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: ci-deployer
+  apiGroup: rbac.authorization.k8s.io
+---
+# The traefik Service hostname is read by the CI smoke test.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ci-read-traefik
+  namespace: traefik
+rules:
+  - apiGroups: [""]
+    resources: [services]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ci-read-traefik
+  namespace: traefik
+subjects:
+  - kind: Group
+    name: waiting-room-deployers
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: ci-read-traefik
+  apiGroup: rbac.authorization.k8s.io
