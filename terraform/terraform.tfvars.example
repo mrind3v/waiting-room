@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars (git-ignored). No credentials belong here: they come from AWS_PROFILE.
+region             = "ap-southeast-2"
+azs                = ["ap-southeast-2a", "ap-southeast-2b"]
+cluster_name       = "waiting-room-eks"
+kubernetes_version = "1.35"
+node_instance_type = "m7i-flex.large"
