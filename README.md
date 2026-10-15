@@ -53,7 +53,7 @@ Requirements: Docker. (For the cluster: kind, kubectl, helm. For development: Py
 ```bash
 cp .env.example .env        # set POSTGRES_PASSWORD
 docker compose up --build   # db → migrate → backend → frontend
-docker compose exec backend python -m app.seed    # optional demo data
+make seed                    # demo data (a fresh database is empty)
 open http://localhost:3000   # API docs: http://localhost:8000/docs
 ```
 

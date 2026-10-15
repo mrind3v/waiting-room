@@ -1,5 +1,10 @@
 # Submission guide: what to screenshot and record
 
+> **Seed first.** A fresh database (and anything after `docker compose down -v`) is empty. Run
+> `docker compose exec backend python -m app.seed` (or `make seed`) before any screenshot that shows data.
+> The seed is idempotent and only inserts when no doctors exist. On kind use
+> `kubectl -n waiting-room exec deploy/waiting-room-backend -- python -m app.seed`.
+
 Save every image in `docs/screenshots/` with exactly these names. Use full-window screenshots
 (macOS: `Cmd+Shift+4` then `Space` then click the window; or `Cmd+Shift+5` to record). Keep the terminal
 font large and make sure the **command and its output** are both visible. Never show secrets
@@ -12,7 +17,7 @@ else can be captured **now, locally**.
 
 | File | Rubric | How to capture it | Must be visible |
 |---|---|---|---|
-| `m1-board.png` | M1 | `docker compose up --build -d`, seed, open http://localhost:3000 | Board with 4 columns, KPI strip, waiting timers, doctor chips |
+| `m1-board.png` | M1 | `docker compose up --build -d`, `make seed`, open http://localhost:3000 | Board with 4 columns, KPI strip, waiting timers, doctor chips |
 | `m1-schedule-409.png` | M1 | Schedule → open a free slot in one tab, book it in another; the second shows "Slot just taken" | The inline red 409 message |
 | `m1-mobile.png` | M1 | DevTools → device toolbar → iPhone SE (375px) on the Board | Stacked columns and bottom tab bar |
 | `m1-swagger.png` | M1 | http://localhost:8000/docs | All routes expanded or visible |
@@ -21,7 +26,7 @@ else can be captured **now, locally**.
 | `m2-pytest.png` | M2 | `cd backend && set -a && . ../.env && set +a && .venv/bin/pytest -v` | All 36 PASSED and the coverage table |
 | `m3-commits.png` | M3 | `git log --oneline --decorate \| head -30` (or the GitHub commits page) | ≥10 meaningful messages |
 | `m4-compose-up.png` | M4 | `docker compose down -v && docker compose up --build` (let it settle, then `docker compose ps`) | `db` healthy, `migrate` exited 0, `backend` healthy, `frontend` up |
-| `m4-localhost-3000.png` | M4 | Browser on http://localhost:3000 | App loaded with data |
+| `m4-localhost-3000.png` | M4 | After `compose up`, run `docker compose exec backend python -m app.seed` (or `make seed`), then refresh http://localhost:3000 | Board populated with seeded patients in all four columns |
 | `m4-nonroot.png` | M4 | `docker compose exec backend id -u; docker compose exec frontend id -u` | `10001` and `101` |
 | `m5-green-run.png` | M5 | GitHub → Actions → latest green run (graph view) | All jobs green incl. Trivy; run URL in the address bar |
 | `m5-red-run.png` | M5 | Open a PR that breaks one test (revert afterwards); screenshot the failed run | `backend-test` red and `build-scan-push` skipped |

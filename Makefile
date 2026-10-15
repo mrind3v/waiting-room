@@ -1,10 +1,12 @@
-.PHONY: up down test lint kind-up kind-load kind-deploy kind-down tf-plan
+.PHONY: up down seed test lint kind-up kind-deploy kind-down tf-plan
 SHA ?= $(shell git rev-parse HEAD)
 
 up:        ## full stack in docker compose -> http://localhost:3000
 	docker compose up --build -d
 down:
 	docker compose down
+seed:      ## idempotent demo data (4 doctors, 15 patients, 17 appointments)
+	docker compose exec backend python -m app.seed
 test:      ## needs `docker compose up -d db` and POSTGRES_PASSWORD from .env
 	cd backend && set -a && . ../.env && set +a && .venv/bin/pytest -v
 lint:
