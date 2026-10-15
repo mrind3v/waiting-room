@@ -33,9 +33,10 @@ grafana:
       enabled: true
       label: grafana_dashboard
       searchNamespace: ALL
+  # 256Mi was OOMKilled in practice (Grafana + dashboard/datasource sidecars).
   resources:
-    requests: {cpu: 50m, memory: 128Mi}
-    limits: {cpu: 300m, memory: 256Mi}
+    requests: {cpu: 100m, memory: 384Mi}
+    limits: {cpu: 500m, memory: 768Mi}
 # EKS hides these control-plane components; scraping them only creates false DOWN targets.
 kubeEtcd: {enabled: false}
 kubeControllerManager: {enabled: false}
