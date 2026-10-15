@@ -1,0 +1,36 @@
+# instructor reference project - never commit
+reference/
+
+# secrets / env
+.env
+*.pem
+*.kubeconfig
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# node
+node_modules/
+dist/
+
+# terraform (keep .terraform.lock.hcl committed)
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+*.tfplan
+terraform.tfvars
+crash.log
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.log

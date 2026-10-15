@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(terraform apply*)",
+      "Bash(terraform destroy*)",
+      "Bash(eksctl*)"
+    ],
+    "ask": [
+      "Bash(helm uninstall*)",
+      "Bash(kubectl delete*)"
+    ]
+  }
+}
