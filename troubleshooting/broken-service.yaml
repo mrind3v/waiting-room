@@ -1,0 +1,14 @@
+# Scenario 2: Service with no endpoints. The Pods are healthy but labelled component=backend,
+# while this Service selects component=api.
+apiVersion: v1
+kind: Service
+metadata:
+  name: wr-broken-service
+  namespace: waiting-room
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: waiting-room
+    app.kubernetes.io/component: api
+  ports:
+    - {name: http, port: 8000, targetPort: 8000}

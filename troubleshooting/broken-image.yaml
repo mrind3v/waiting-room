@@ -1,0 +1,19 @@
+# Scenario 1: ImagePullBackOff. The tag does not exist in GHCR.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wr-broken-image
+  namespace: waiting-room
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: wr-broken-image}
+  template:
+    metadata:
+      labels: {app: wr-broken-image}
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/mrind3v/waiting-room-backend:this-tag-does-not-exist
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}

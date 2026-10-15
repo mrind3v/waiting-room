@@ -1,0 +1,33 @@
+# Scenario 3: Running but never Ready. DB_HOST points at a host that does not exist,
+# so /ready returns 503 and the Pod is kept out of rotation.
+# Apply with:  SHA=<git-sha-of-a-pushed-image> envsubst < troubleshooting/broken-readiness.yaml | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wr-broken-readiness
+  namespace: waiting-room
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: wr-broken-readiness}
+  template:
+    metadata:
+      labels: {app: wr-broken-readiness}
+    spec:
+      securityContext: {runAsNonRoot: true, runAsUser: 10001, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: backend
+          image: ghcr.io/mrind3v/waiting-room-backend:${SHA}
+          env:
+            - {name: DB_HOST, value: postgres-typo}
+            - {name: DB_PASSWORD, value: unused}
+          ports: [{name: http, containerPort: 8000}]
+          readinessProbe:
+            httpGet: {path: /ready, port: http}
+            periodSeconds: 5
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: 10m, memory: 64Mi}
