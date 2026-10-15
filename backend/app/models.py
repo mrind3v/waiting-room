@@ -79,5 +79,5 @@ class Appointment(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    patient: Mapped[Patient] = relationship(lazy="joined")
-    doctor: Mapped[Doctor] = relationship(lazy="joined")
+    patient: Mapped[Patient] = relationship(lazy="joined", innerjoin=True)
+    doctor: Mapped[Doctor] = relationship(lazy="joined", innerjoin=True)
