@@ -7,6 +7,7 @@ RUN pip install --prefix=/install -r requirements.txt
 
 FROM python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
 ARG GIT_SHA=dev
+LABEL org.opencontainers.image.source="https://github.com/mrind3v/waiting-room"
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 GIT_SHA=${GIT_SHA}
 WORKDIR /app
 RUN useradd --system --uid 10001 --no-create-home --shell /usr/sbin/nologin app
