@@ -8,6 +8,20 @@ Trivy, GHCR, Terraform (AWS VPC + EKS), Kubernetes, Helm, Ingress, HPA, Promethe
 > DevOps capstone project. Domain, schema, API and UI are original; only the pipeline architecture
 > follows the course reference.
 
+## For reviewers
+
+| Start here | What you get |
+|---|---|
+| **[Presentation (PDF)](docs/presentation/Waiting-Room-Presentation.pdf)** | The whole project in 40 slides: app, tests, Docker, pipeline, Terraform, Kubernetes, monitoring, lessons. Opens in the browser |
+| [Presentation (PowerPoint)](docs/presentation/Waiting-Room-Presentation.pptx) | The same deck with speaker notes (GitHub offers it as a download) |
+| [Screenshots](docs/screenshots/) | Evidence for every grading module |
+| [Submission guide](docs/SUBMISSION.md) | Which screenshot proves which rubric item |
+| [Green pipeline runs](../../actions) | Tests, Trivy scan, image push and deploy on every commit |
+
+The AWS stack (VPC + EKS) ran for one short window to capture the evidence, then Terraform destroyed
+it and a verification script confirmed nothing was left (`ALL CLEAN`). The live URL is therefore
+gone by design; the screenshots and the recorded numbers in the deck are the proof.
+
 ## What it does
 
 | Screen | Purpose |
@@ -112,10 +126,27 @@ All third-party actions are pinned to full commit SHAs (the Trivy action was com
 
 ## Cost
 
-AWS is used for one short window only (about **$0.26/hour**: EKS control plane, one `m7i-flex.large`,
-one NLB). All development and testing happens in Docker Compose and kind. Terraform uses public
+AWS ran for one short window only (about **$0.26/hour**: EKS control plane, one `m7i-flex.large`,
+one NLB), then everything was destroyed and verified. All development and testing happens in Docker
+Compose and a local kind cluster; a $100 budget with six alerts guards the account. Terraform uses public
 subnets only (no NAT gateway), no RDS and no KMS key. Procedure and teardown checks:
 [docs/RUNBOOK-AWS.md](docs/RUNBOOK-AWS.md).
+
+## Evidence
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/m1-board.png" alt="Live queue board"><br><sub>The live queue board (Docker Compose)</sub></td>
+<td width="50%"><img src="docs/screenshots/m5-green-run.png" alt="Green pipeline run"><br><sub>Green pipeline: tests, Trivy, push, deploy</sub></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/m8-ingress-browser.png" alt="App on EKS"><br><sub>The app on EKS behind one load balancer</sub></td>
+<td width="50%"><img src="docs/screenshots/m9-eks-grafana.png" alt="Grafana dashboard"><br><sub>Grafana dashboard on the EKS cluster</sub></td>
+</tr>
+</table>
+
+All screenshots, one per grading item, are in [docs/screenshots](docs/screenshots/) and mapped in
+[docs/SUBMISSION.md](docs/SUBMISSION.md).
 
 ## Repository layout
 
@@ -128,5 +159,6 @@ terraform/  VPC + EKS (ap-southeast-2)
 monitoring/ Prometheus/Grafana, Traefik and metrics-server values
 scripts/    cluster bootstrap, load test, pre-destroy, teardown verification
 troubleshooting/  three broken manifests with a diagnosis guide
-docs/       architecture, AWS runbook, security scan, versions, submission guide
+docs/       architecture, AWS runbook, security scan, versions, submission guide,
+            presentation/ (PDF + PowerPoint), screenshots/
 ```
