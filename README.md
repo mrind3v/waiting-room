@@ -16,7 +16,7 @@ Trivy, GHCR, Terraform (AWS VPC + EKS), Kubernetes, Helm, Ingress, HPA, Promethe
 | [Presentation (PowerPoint)](docs/presentation/Waiting-Room-Presentation.pptx) | The same deck with speaker notes (GitHub offers it as a download) |
 | [Screenshots](docs/screenshots/) | Evidence for every grading module |
 | [Submission guide](docs/SUBMISSION.md) | Which screenshot proves which rubric item |
-| [Green pipeline runs](../../actions) | Tests, Trivy scan, image push and deploy on every commit |
+| [Green pipeline runs](https://github.com/mrind3v/waiting-room/actions) | Tests, Trivy scan, image push and deploy on every commit |
 
 The AWS stack (VPC + EKS) ran for one short window to capture the evidence, then Terraform destroyed
 it and a verification script confirmed nothing was left (`ALL CLEAN`). The live URL is therefore
