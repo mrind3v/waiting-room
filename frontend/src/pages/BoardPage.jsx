@@ -66,7 +66,7 @@ export default function BoardPage() {
         <div>
           <h1>Waiting room</h1>
           <p className="muted">
-            Today’s queue
+            Today’s queue · Front desk
             {board.updatedAt && <> · updated {fmtClock(board.updatedAt)}</>}
           </p>
         </div>
