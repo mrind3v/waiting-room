@@ -36,7 +36,7 @@ gh variable set DEPLOY_ENABLED --body true
 
 ## 2. Deploy and demo (about 2 h, recorded)
 ```bash
-gh workflow run ci-cd.yml --ref main && gh run watch     # first deploy, or push a commit
+git commit --allow-empty -m "chore: trigger first EKS deploy" && git push && gh run watch   # deploy only runs on push events
 kubectl -n waiting-room exec deploy/waiting-room-backend -- python -m app.seed
 kubectl -n waiting-room get pods,svc,ingress,hpa ; helm list -A
 ```

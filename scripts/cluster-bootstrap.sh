@@ -37,7 +37,7 @@ helm repo update >/dev/null
 MS_ARGS=()
 [ "$TARGET" = "kind" ] && MS_ARGS=(-f monitoring/metrics-server-values-kind.yaml)
 helm upgrade --install metrics-server metrics-server/metrics-server \
-  --version "$METRICS_SERVER_CHART" -n kube-system "${MS_ARGS[@]}" --wait --timeout 5m
+  --version "$METRICS_SERVER_CHART" -n kube-system ${MS_ARGS[@]+"${MS_ARGS[@]}"} --wait --timeout 5m
 
 helm upgrade --install traefik traefik/traefik \
   --version "$TRAEFIK_CHART" -n traefik -f "monitoring/traefik-values-$TARGET.yaml" \
