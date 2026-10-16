@@ -70,6 +70,7 @@ gateways, non-default VPCs, tagged security groups, IAM user/roles, CloudWatch l
 ap-southeast-2 **and** us-east-1.
 
 ## If something goes wrong
+- `terraform destroy` fails on the IAM user with `iam:DeleteLoginProfile ... explicit deny in a service control policy` → the user was created with `force_destroy = true`, which the Free plan blocks. The code now sets `false`; if you hit it on an older state, run `terraform apply -target=aws_iam_user.ci` (state-only update), then `terraform destroy`.
 - `terraform destroy` hangs on the VPC → an orphaned NLB/ENI/volume: run `verify-teardown.sh`, delete the
   leftover in the console (EC2 → Load Balancers / Volumes), re-run destroy.
 - Pods Pending on EKS → node full (the node has 29 pod slots and 8 GiB); check `kubectl describe pod`.

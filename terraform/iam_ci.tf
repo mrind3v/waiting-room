@@ -1,7 +1,7 @@
 # Short-lived CI identity. Exists only for the AWS window and is destroyed with the stack.
 resource "aws_iam_user" "ci" {
   name          = "${var.cluster_name}-ci"
-  force_destroy = true
+  force_destroy = false # true makes the provider call iam:DeleteLoginProfile, denied by the Free-plan SCP
 }
 
 resource "aws_iam_user_policy" "ci_describe_cluster" {
