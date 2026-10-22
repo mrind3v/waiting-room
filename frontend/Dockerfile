@@ -8,7 +8,7 @@ ARG VITE_APP_VERSION=dev
 ENV VITE_APP_VERSION=${VITE_APP_VERSION}
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged@sha256:782bb89768cc87b7f95c18b95baa1af250e5d451f26794f59363540161147c01
+FROM nginxinc/nginx-unprivileged@sha256:09b0d3eda2aa592d2487f284519419015cab010d7df16cd0fe224b585fc60eb6
 LABEL org.opencontainers.image.source="https://github.com/mrind3v/waiting-room"
 ENV API_UPSTREAM=http://backend:8000
 COPY --from=build /app/dist /usr/share/nginx/html
